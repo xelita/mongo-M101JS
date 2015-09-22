@@ -1,7 +1,6 @@
 # Launching MongoDB
 mongod --dbpath /Users/Benjamin/Documents/dev/projects/sources/xelita/github/mongo-M101JS/data/
 
-
 ## FINAL: QUESTION 1
 
 Please download the Enron email dataset enron.zip, unzip it and then restore it using mongorestore. It should restore to a collection called "messages" in a database called "enron". Note that this is an abbreviated version of the full corpus. There should be 120,477 documents after restore. 
@@ -25,7 +24,9 @@ For reference, the number of email messages from Andrew Fastow to John Lavorato 
 
 mongorestore question1/dump
 mongo enron
+<pre><code>
 > db.messages.count({"headers.From": "andrew.fastow@enron.com", "headers.To": "jeff.skilling@enron.com"})
+</pre></code>
 
 See (X) above
 
@@ -47,6 +48,7 @@ Which pair of people have the greatest number of messages in the dataset?
 ### ANSWER
 
 mongo enron
+<pre><code>
 > db.messages.aggregate([
 	{$project: {"from": "$headers.From", "to": "$headers.To"}},
 	{$unwind: "$to"},
@@ -56,6 +58,7 @@ mongo enron
 	{$sort: {total: -1}},
 	{$limit: 1}
 ])
+</code></pre>
 
 See (X) above
 
@@ -70,7 +73,9 @@ After you have completed that task, please download final3.zip from the Download
 ### ANSWER
 
 mongo enron
+<pre><code>
 > db.messages.update({"headers.Message-ID": "<8147308.1075851042335.JavaMail.evans@thyme>"}, {$addToSet: {"headers.To": "mrpotatohead@mongodb.com"}})
+</pre></code>
 
 cd question3/validate
 npm install
@@ -114,7 +119,7 @@ node final4-validate.js
 ## FINAL: QUESTION 5
 
 Suppose your have a collection stuff which has the _id index,
-
+<pre><code>
   {
     "v" : 1,
     "key" : {
@@ -123,8 +128,9 @@ Suppose your have a collection stuff which has the _id index,
     "ns" : "test.stuff",
     "name" : "_id_"
   }
+</pre></code>  
 and one or more of the following indexes as well:
-
+<pre><code>
   {
     "v" : 1,
     "key" : {
@@ -161,11 +167,11 @@ and one or more of the following indexes as well:
     "ns" : "test.stuff",
     "name" : "a_1_b_1_c_-1"
   }
+</pre></code>  
 Now suppose you want to run the following query against the collection.
 
 db.stuff.find({'a':{'$lt':10000}, 'b':{'$gt': 5000}}, {'a':1, 'c':1}).sort({'c':-1})
 Which of the indexes could be used by MongoDB to assist in answering the query? Check all that apply.
-
 
 -> c_1 (X)
 -> a_1_b_1_c_-1 (X)
@@ -180,6 +186,7 @@ See (X) above
 ## FINAL: QUESTION 6
 
 Suppose you have a collection of students of the following form:
+<pre><code>
 {
 	"_id" : ObjectId("50c598f582094fb5f92efb96"),
 	"first_name" : "John",
@@ -195,6 +202,7 @@ Suppose you have a collection of students of the following form:
 		"Art232"
 	]
 }
+</pre></code>
 
 Now suppose that basic inserts into the collection, which only include the last name, first name and student_id, are too slow (we can't do enough of them per second from our program). What could potentially improve the speed of inserts. Check all that apply.
 
@@ -212,6 +220,7 @@ See (X) above
 
 You have been tasked to cleanup a photosharing database. The database consists of two collections, albums, and images. Every image is supposed to be in an album, but there are orphan images that appear in no album. Here are some example documents (not from the collections you will be downloading). 
 
+<pre><code>
 > db.albums.findOne()
 {
   "_id" : 67
@@ -234,9 +243,12 @@ You have been tasked to cleanup a photosharing database. The database consists o
     99705
   ]
 }
+</pre></code>
 
+<pre><code>
 > db.images.findOne()
 { "_id" : 99705, "height" : 480, "width" : 640, "tags" : [ "dogs", "kittens", "work" ] }
+</pre></code>
 
 From the above, you can conclude that the image with _id = 99705 is in album 67. It is not an orphan. 
 
@@ -260,9 +272,11 @@ mongoimport -d photosharing -c images question7/images.json
 
 mongo photosharing question7/script.js --shell
 
+<pre><code>
 > nbOfImagesTaggedKittens();
 > removeOphans();
 > nbOfImagesTaggedKittens();
+</pre></code>
 
 See (X) above
 
@@ -305,11 +319,13 @@ See (X) above
 Understanding the output of explain
 
 We perform the following query on the enron dataset:
-
+<pre><code>
 var exp = db.messages.explain('executionStats')
- 
 exp.find( { 'headers.Date' : { '$gt' : new Date(2001,3,1) } }, { 'headers.From' : 1, '_id' : 0 } ).sort( { 'headers.From' : 1 } )
+</pre></code>
+
 and get the following explain output.
+<pre><code>
 {
   "queryPlanner" : {
     "plannerVersion" : 1,
@@ -432,6 +448,7 @@ and get the following explain output.
   },
   "ok" : 1
 }
+</pre></code>
 Check below all the statements that are true about the way MongoDB handled this query.
 
 -> The query scanned every document in the collection. (X)
