@@ -1,7 +1,7 @@
 # Launching MongoDB
 <pre><code>
 mongod --dbpath /Users/Benjamin/Documents/dev/projects/sources/xelita/github/mongo-M101JS/data/
-</pre></code>
+</code></pre>
 
 ## FINAL: QUESTION 1
 
@@ -15,12 +15,12 @@ Construct a query to calculate the number of messages sent by Andrew Fastow, CFO
 
 For reference, the number of email messages from Andrew Fastow to John Lavorato (john.lavorato@enron.com) was 1. 
 
--> 1
--> 3 (X)
--> 5
--> 7
--> 9
--> 12
+- 1
+- 3 (X)
+- 5
+- 7
+- 9
+- 12
 
 ### ANSWER
 
@@ -29,7 +29,7 @@ mongorestore question1/dump
 mongo enron
 
 > db.messages.count({"headers.From": "andrew.fastow@enron.com", "headers.To": "jeff.skilling@enron.com"})
-</pre></code>
+</code></pre>
 
 See (X) above
 
@@ -41,25 +41,25 @@ This problem is a little tricky because a recipient may appear more than once in
 
 Which pair of people have the greatest number of messages in the dataset?
 
--> susan.mara@enron.com to jeff.dasovich@enron.com (X)
--> susan.mara@enron.com to richard.shapiro@enron.com
--> soblander@carrfut.com to soblander@carrfut.com
--> susan.mara@enron.com to james.steffes@enron.com
--> evelyn.metoyer@enron.com to kate.symes@enron.com
--> susan.mara@enron.com to alan.comnes@enron.com
+- susan.mara@enron.com to jeff.dasovich@enron.com (X)
+- susan.mara@enron.com to richard.shapiro@enron.com
+- soblander@carrfut.com to soblander@carrfut.com
+- susan.mara@enron.com to james.steffes@enron.com
+- evelyn.metoyer@enron.com to kate.symes@enron.com
+- susan.mara@enron.com to alan.comnes@enron.com
 
 ### ANSWER
 
 <pre><code>
 mongo enron
 > db.messages.aggregate([
-	{$project: {"from": "$headers.From", "to": "$headers.To"}},
-	{$unwind: "$to"},
-	{$group: {_id: {id: "$_id", from: "$from"}, to: {$addToSet: "$to"}}},
-	{$unwind: "$to"},
-	{$group: {_id: {from: "$_id.from", to: "$to"}, total: {$sum: 1}}},
-	{$sort: {total: -1}},
-	{$limit: 1}
+  {$project: {"from": "$headers.From", "to": "$headers.To"}},
+  {$unwind: "$to"},
+  {$group: {_id: {id: "$_id", from: "$from"}, to: {$addToSet: "$to"}}},
+  {$unwind: "$to"},
+  {$group: {_id: {from: "$_id.from", to: "$to"}, total: {$sum: 1}}},
+  {$sort: {total: -1}},
+  {$limit: 1}
 ])
 </code></pre>
 
@@ -82,7 +82,7 @@ mongo enron
 cd question3/validate
 npm install
 node final3-validate.js
-</pre></code>
+</code></pre>
 
 -> vOnRg05kwcqyEFSve96R
 
@@ -117,7 +117,7 @@ node app.js
 cd question4/validate
 npm install
 node final4-validate.js
-</pre></code>
+</code></pre>
 
 -> VQ3jedFjG5VmElLTYKqS
 
@@ -133,7 +133,7 @@ Suppose your have a collection stuff which has the _id index,
     "ns" : "test.stuff",
     "name" : "_id_"
   }
-</pre></code>  
+</code></pre> 
 
 and one or more of the following indexes as well:
 
@@ -174,21 +174,21 @@ and one or more of the following indexes as well:
     "ns" : "test.stuff",
     "name" : "a_1_b_1_c_-1"
   }
-</pre></code>  
+</code></pre> 
 
 Now suppose you want to run the following query against the collection.
 
 <pre><code>
 db.stuff.find({'a':{'$lt':10000}, 'b':{'$gt': 5000}}, {'a':1, 'c':1}).sort({'c':-1})
-</pre></code>
+</code></pre>
 
 Which of the indexes could be used by MongoDB to assist in answering the query? Check all that apply.
 
--> c_1 (X)
--> a_1_b_1_c_-1 (X)
--> a_1_c_1
--> a_1_b_1 (X)
--> _id_
+- c_1 (X)
+- a_1_b_1_c_-1 (X)
+- a_1_c_1
+- a_1_b_1 (X)
+- _id_
 
 ### ANSWER
 
@@ -199,29 +199,29 @@ See (X) above
 Suppose you have a collection of students of the following form:
 <pre><code>
 {
-	"_id" : ObjectId("50c598f582094fb5f92efb96"),
-	"first_name" : "John",
-	"last_name" : "Doe",
-	"date_of_admission" : ISODate("2010-02-21T05:00:00Z"),
-	"residence_hall" : "Fairweather",
-	"has_car" : true,
-	"student_id" : "2348023902",
-	"current_classes" : [
-		"His343",
-		"Math234",
-		"Phy123",
-		"Art232"
-	]
+  "_id" : ObjectId("50c598f582094fb5f92efb96"),
+  "first_name" : "John",
+  "last_name" : "Doe",
+  "date_of_admission" : ISODate("2010-02-21T05:00:00Z"),
+  "residence_hall" : "Fairweather",
+  "has_car" : true,
+  "student_id" : "2348023902",
+  "current_classes" : [
+    "His343",
+    "Math234",
+    "Phy123",
+    "Art232"
+  ]
 }
-</pre></code>
+</code></pre>
 
 Now suppose that basic inserts into the collection, which only include the last name, first name and student_id, are too slow (we can't do enough of them per second from our program). What could potentially improve the speed of inserts. Check all that apply.
 
--> Add an index on last_name, first_name if one does not already exist.
--> Remove all indexes from the collection, leaving only the index on _id in place (X)
--> Provide a hint to MongoDB that it should not use an index for the inserts
--> Set w=0, j=0 on writes (X)
--> Build a replica set and insert data into the secondary nodes to free up the primary nodes.
+- Add an index on last_name, first_name if one does not already exist.
+- Remove all indexes from the collection, leaving only the index on _id in place (X)
+- Provide a hint to MongoDB that it should not use an index for the inserts
+- Set w=0, j=0 on writes (X)
+- Build a replica set and insert data into the secondary nodes to free up the primary nodes.
 
 ### ANSWER
 
@@ -257,7 +257,7 @@ You have been tasked to cleanup a photosharing database. The database consists o
 
 > db.images.findOne()
 { "_id" : 99705, "height" : 480, "width" : 640, "tags" : [ "dogs", "kittens", "work" ] }
-</pre></code>
+</code></pre>
 
 From the above, you can conclude that the image with _id = 99705 is in album 67. It is not an orphan. 
 
@@ -268,11 +268,11 @@ Download and unzip Final7.zip and use mongoimport to import the collections in a
 When you are done removing the orphan images from the collection, there should be 89,737 documents in the images collection. To prove you did it correctly, what are the total number of images with the tag 'kittens" after the removal of orphans? As as a sanity check, there are 49,932 images that are tagged 'kittens' before you remove the images. 
 Hint: you might consider creating an index or two or your program will take a long time to run. 
 
--> 49,932
--> 47,678
--> 38,934
--> 45,911
--> 44,822 (X)
+- 49,932
+- 47,678
+- 38,934
+- 45,911
+- 44,822 (X)
 
 ### ANSWER
 
@@ -285,7 +285,7 @@ mongo photosharing question7/script.js --shell
 > nbOfImagesTaggedKittens();
 > removeOphans();
 > nbOfImagesTaggedKittens();
-</pre></code>
+</code></pre>
 
 See (X) above
 
@@ -297,10 +297,10 @@ A write operation (could be insert or update) is initiated from your application
 
 Will there be a rollback of data on Node 1 when Node 1 comes back up? Choose the best answer.
 
--> Yes, always
--> No, never
--> Maybe, it depends on whether Node 3 has processed the write
--> Maybe, it depends on whether Node 2 has processed the write (X)
+- Yes, always
+- No, never
+- Maybe, it depends on whether Node 3 has processed the write
+- Maybe, it depends on whether Node 2 has processed the write (X)
 
 ### ANSWER
 
@@ -312,12 +312,12 @@ Imagine an electronic medical record database designed to hold the medical recor
 
 We need to decide on a shard key to shard the record collection. What's the best shard key for the record collection, provided that we are willing to run inefficient scatter-gather operations to do infrequent research and run studies on various diseases and cohorts? That is, think mostly about the operational aspects of such a system. And by operational, we mean, think about what the most common operations that this systems needs to perform day in and day out.
 
--> patient_id (X)
--> _id
--> Primary care physician (your principal doctor that handles everyday problems)
--> Date and time when medical record was created
--> Patient first name
--> Patient last name
+- patient_id (X)
+- _id
+- Primary care physician (your principal doctor that handles everyday problems)
+- Date and time when medical record was created
+- Patient first name
+- Patient last name
 
 ### ANSWER
 
@@ -331,7 +331,7 @@ We perform the following query on the enron dataset:
 <pre><code>
 var exp = db.messages.explain('executionStats')
 exp.find( { 'headers.Date' : { '$gt' : new Date(2001,3,1) } }, { 'headers.From' : 1, '_id' : 0 } ).sort( { 'headers.From' : 1 } )
-</pre></code>
+</code></pre>
 
 and get the following explain output.
 <pre><code>
@@ -457,13 +457,13 @@ and get the following explain output.
   },
   "ok" : 1
 }
-</pre></code>
+</code></pre>
 Check below all the statements that are true about the way MongoDB handled this query.
 
--> The query scanned every document in the collection. (X)
--> The query avoided sorting the documents because it was able to use an index's ordering. (X)
--> The query used an index to figure out which documents match the find criteria.
--> The query returned 120,477 documents.
+- The query scanned every document in the collection. (X)
+- The query avoided sorting the documents because it was able to use an index's ordering. (X)
+- The query used an index to figure out which documents match the find criteria.
+- The query returned 120,477 documents.
 
 ### ANSWER
 
