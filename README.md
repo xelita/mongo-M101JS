@@ -186,11 +186,30 @@ Which of the indexes could be used by MongoDB to assist in answering the query? 
 
 - c_1 (X)
 - a_1_b_1_c_-1 (X)
-- a_1_c_1
+- a_1_c_1 (X)
 - a_1_b_1 (X)
 - _id_
 
 ### ANSWER
+
+<pre><code>
+mongo test
+> db.stuff.createIndex({a: 1, b:1})
+> db.stuff.createIndex({a: 1, c:1})
+> db.stuff.createIndex({c:1})
+> db.stuff.createIndex({a:1, b:1, c:-1})
+</code></pre>
+
+Verify that your indexes have been created accordingly:
+<pre><code>
+> db.stuff.getIndexes()
+</code></pre>
+
+Use explain to verify if specific index is using during the request:
+<pre><code>
+db.stuff.find({'a':{'$lt':10000}, 'b':{'$gt': 5000}}, {'a':1, 'c':1}).sort({'c':-1}).explain()
+</code></pre>
+Thus, you can see which index is used when performing the query (in the winningPlan part) and which ones are rejected (in rejectedPlans part).
 
 See (X) above
 
