@@ -1,5 +1,7 @@
 # Launching MongoDB
+<pre><code>
 mongod --dbpath /Users/Benjamin/Documents/dev/projects/sources/xelita/github/mongo-M101JS/data/
+</pre></code>
 
 ## FINAL: QUESTION 1
 
@@ -22,9 +24,10 @@ For reference, the number of email messages from Andrew Fastow to John Lavorato 
 
 ### ANSWER
 
+<pre><code>
 mongorestore question1/dump
 mongo enron
-<pre><code>
+
 > db.messages.count({"headers.From": "andrew.fastow@enron.com", "headers.To": "jeff.skilling@enron.com"})
 </pre></code>
 
@@ -47,8 +50,8 @@ Which pair of people have the greatest number of messages in the dataset?
 
 ### ANSWER
 
-mongo enron
 <pre><code>
+mongo enron
 > db.messages.aggregate([
 	{$project: {"from": "$headers.From", "to": "$headers.To"}},
 	{$unwind: "$to"},
@@ -72,14 +75,14 @@ After you have completed that task, please download final3.zip from the Download
 
 ### ANSWER
 
-mongo enron
 <pre><code>
+mongo enron
 > db.messages.update({"headers.Message-ID": "<8147308.1075851042335.JavaMail.evans@thyme>"}, {$addToSet: {"headers.To": "mrpotatohead@mongodb.com"}})
-</pre></code>
 
 cd question3/validate
 npm install
 node final3-validate.js
+</pre></code>
 
 -> vOnRg05kwcqyEFSve96R
 
@@ -104,6 +107,7 @@ After you have gotten it working, enter the validation string below.
 
 ### ANSWER
 
+<pre><code>
 mongoimport -d blog -c posts question4/posts.json
 
 cd question4/blog
@@ -113,6 +117,7 @@ node app.js
 cd question4/validate
 npm install
 node final4-validate.js
+</pre></code>
 
 -> VQ3jedFjG5VmElLTYKqS
 
@@ -129,7 +134,9 @@ Suppose your have a collection stuff which has the _id index,
     "name" : "_id_"
   }
 </pre></code>  
+
 and one or more of the following indexes as well:
+
 <pre><code>
   {
     "v" : 1,
@@ -168,9 +175,13 @@ and one or more of the following indexes as well:
     "name" : "a_1_b_1_c_-1"
   }
 </pre></code>  
+
 Now suppose you want to run the following query against the collection.
 
+<pre><code>
 db.stuff.find({'a':{'$lt':10000}, 'b':{'$gt': 5000}}, {'a':1, 'c':1}).sort({'c':-1})
+</pre></code>
+
 Which of the indexes could be used by MongoDB to assist in answering the query? Check all that apply.
 
 -> c_1 (X)
@@ -243,9 +254,7 @@ You have been tasked to cleanup a photosharing database. The database consists o
     99705
   ]
 }
-</pre></code>
 
-<pre><code>
 > db.images.findOne()
 { "_id" : 99705, "height" : 480, "width" : 640, "tags" : [ "dogs", "kittens", "work" ] }
 </pre></code>
@@ -267,12 +276,12 @@ Hint: you might consider creating an index or two or your program will take a lo
 
 ### ANSWER
 
+<pre><code>
 mongoimport -d photosharing -c albums question7/albums.json
 mongoimport -d photosharing -c images question7/images.json
 
 mongo photosharing question7/script.js --shell
 
-<pre><code>
 > nbOfImagesTaggedKittens();
 > removeOphans();
 > nbOfImagesTaggedKittens();
